@@ -117,52 +117,62 @@ const DoctorOnboarding: React.FC = () => {
   };
 
   return (
-    <div className="doctor-onboarding">
-      <div className="container">
-        <h1>Doctor Onboarding</h1>
-        <p className="subtitle">
-          Complete the form below to onboard a new doctor with AI-generated medical history
+    <div className="page-container">
+      <div className="page-header">
+        <h1 className="page-title">Doctor Onboarding & Management</h1>
+        <p className="page-subtitle">
+          Build provider trust + ensure insurance/credentialing compliance
         </p>
+      </div>
 
-        {error && (
-          <div className="error-message">
-            <h3>Error</h3>
-            <p>{error}</p>
+      {error && (
+        <div className="card" style={{ background: '#fee', border: '1px solid #fcc', color: '#c33' }}>
+          <h3 style={{ margin: '0 0 0.5rem 0', color: '#c33' }}>Error</h3>
+          <p>{error}</p>
+        </div>
+      )}
+
+      {result && (
+        <div className="card">
+          <div className="card-header">
+            <h3 className="card-title" style={{ color: '#28a745' }}>Onboarding Successful!</h3>
           </div>
-        )}
-
-        {result && (
-          <div className="success-message">
-            <h3>Onboarding Successful!</h3>
-            <p><strong>Doctor ID:</strong> {result.doctor_id}</p>
-            <p><strong>Status:</strong> {result.status}</p>
-            <p><strong>Message:</strong> {result.message}</p>
-            
-            {result.generated_history && (
-              <div className="generated-history">
-                <h4>Generated Medical History:</h4>
-                <div className="history-content">
-                  {result.generated_history.split('\n').map((line, index) => (
-                    <p key={index}>{line}</p>
-                  ))}
-                </div>
+          <p><strong>Doctor ID:</strong> {result.doctor_id}</p>
+          <p><strong>Status:</strong> {result.status}</p>
+          <p><strong>Message:</strong> {result.message}</p>
+          
+          {result.generated_history && (
+            <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #28a745' }}>
+              <h4 style={{ margin: '0 0 1rem 0', color: '#333', fontSize: '1.1rem' }}>Generated Medical History:</h4>
+              <div style={{ color: '#555', lineHeight: '1.6' }}>
+                {result.generated_history.split('\n').map((line, index) => (
+                  <p key={index} style={{ margin: '0.5rem 0' }}>{line}</p>
+                ))}
               </div>
-            )}
-            
+            </div>
+          )}
+          
+          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <button onClick={resetForm} className="btn btn-secondary">
               Onboard Another Doctor
             </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {!result && (
-          <form onSubmit={handleSubmit} className="onboarding-form">
-            <div className="form-section">
-              <h3>Personal Information</h3>
+      {!result && (
+        <div className="card">
+          <div className="card-header">
+            <h3 className="card-title">Account Creation</h3>
+            <p className="card-subtitle">Doctor enters name, specialty, credentials, insurance accepted, hospital affiliation</p>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #667eea', paddingBottom: '0.5rem' }}>Personal Information</h3>
               
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="first_name">First Name *</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="first_name">First Name *</label>
                   <input
                     type="text"
                     id="first_name"
@@ -171,11 +181,12 @@ const DoctorOnboarding: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="Enter first name"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
                 
-                <div className="form-group">
-                  <label htmlFor="last_name">Last Name *</label>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="last_name">Last Name *</label>
                   <input
                     type="text"
                     id="last_name"
@@ -184,13 +195,14 @@ const DoctorOnboarding: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="Enter last name"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="email">Email Address *</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="email">Email Address *</label>
                   <input
                     type="email"
                     id="email"
@@ -199,11 +211,12 @@ const DoctorOnboarding: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="doctor@hospital.com"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
                 
-                <div className="form-group">
-                  <label htmlFor="phone_number">Phone Number</label>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="phone_number">Phone Number</label>
                   <input
                     type="tel"
                     id="phone_number"
@@ -211,17 +224,18 @@ const DoctorOnboarding: React.FC = () => {
                     value={formData.phone_number}
                     onChange={handleInputChange}
                     placeholder="+1-555-0123"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="form-section">
-              <h3>Professional Information</h3>
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #667eea', paddingBottom: '0.5rem' }}>Professional Information</h3>
               
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="medical_license_number">Medical License Number *</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="medical_license_number">Medical License Number *</label>
                   <input
                     type="text"
                     id="medical_license_number"
@@ -230,17 +244,19 @@ const DoctorOnboarding: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="MD123456"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
                 
-                <div className="form-group">
-                  <label htmlFor="specialty">Medical Specialty *</label>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="specialty">Medical Specialty *</label>
                   <select
                     id="specialty"
                     name="specialty"
                     value={formData.specialty}
                     onChange={handleInputChange}
                     required
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   >
                     <option value="">Select a specialty</option>
                     {specialties.map(specialty => (
@@ -252,9 +268,9 @@ const DoctorOnboarding: React.FC = () => {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="years_of_experience">Years of Experience *</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="years_of_experience">Years of Experience *</label>
                   <input
                     type="number"
                     id="years_of_experience"
@@ -265,11 +281,12 @@ const DoctorOnboarding: React.FC = () => {
                     min="0"
                     max="50"
                     placeholder="5"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
                 
-                <div className="form-group">
-                  <label htmlFor="hospital_affiliation">Hospital Affiliation</label>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="hospital_affiliation">Hospital Affiliation</label>
                   <input
                     type="text"
                     id="hospital_affiliation"
@@ -277,12 +294,13 @@ const DoctorOnboarding: React.FC = () => {
                     value={formData.hospital_affiliation}
                     onChange={handleInputChange}
                     placeholder="City General Hospital"
+                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                   />
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="preferred_working_hours">Preferred Working Hours</label>
+              <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
+                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="preferred_working_hours">Preferred Working Hours</label>
                 <input
                   type="text"
                   id="preferred_working_hours"
@@ -290,11 +308,12 @@ const DoctorOnboarding: React.FC = () => {
                   value={formData.preferred_working_hours}
                   onChange={handleInputChange}
                   placeholder="Monday-Friday 8AM-5PM"
+                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="additional_notes">Additional Notes</label>
+              <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
+                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="additional_notes">Additional Notes</label>
                 <textarea
                   id="additional_notes"
                   name="additional_notes"
@@ -302,11 +321,12 @@ const DoctorOnboarding: React.FC = () => {
                   onChange={handleInputChange}
                   rows={4}
                   placeholder="Any additional information about the doctor..."
+                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white', resize: 'vertical', minHeight: '100px' }}
                 />
               </div>
             </div>
 
-            <div className="form-actions">
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e1e5e9' }}>
               <button 
                 type="submit" 
                 className="btn btn-primary"
@@ -325,8 +345,8 @@ const DoctorOnboarding: React.FC = () => {
               </button>
             </div>
           </form>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

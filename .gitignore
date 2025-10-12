@@ -1,6 +1,6 @@
 # Dependencies
 node_modules/
-backend/venv/
+backend/.venv/
 backend/__pycache__/
 backend/*.pyc
 backend/.pytest_cache/

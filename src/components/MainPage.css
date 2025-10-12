@@ -14,11 +14,12 @@ html {
 	border-radius: 0;
 	padding: 4rem 2rem;
 	margin-bottom: 3rem;
+	margin-top: -40px;
 	text-align: center;
 	color: #333;
 	box-shadow: none;
 	position: relative;
-	min-height: 70vh;
+	min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;

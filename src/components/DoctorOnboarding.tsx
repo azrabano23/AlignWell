@@ -1,354 +1,369 @@
-import React, { useState } from 'react';
-import './DoctorOnboarding.css';
+import React, { useState } from 'react'
+import './DoctorOnboarding.css'
 
 interface DoctorFormData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  medical_license_number: string;
-  specialty: string;
-  years_of_experience: number;
-  hospital_affiliation?: string;
-  phone_number?: string;
-  preferred_working_hours?: string;
-  additional_notes?: string;
+  email: string
+  password: string
+  fullName: string
+  specialty: string
+  credentials: string[]
+  acceptedInsurances: string[]
+  hospitalAffiliation: string
 }
 
-interface OnboardingResponse {
-  doctor_id: string;
-  status: string;
-  message: string;
-  generated_history?: string;
+interface DoctorOnboardingProps {
+  onRegistrationSuccess?: (doctorData: any) => void
 }
 
-const DoctorOnboarding: React.FC = () => {
+const DoctorOnboarding: React.FC<DoctorOnboardingProps> = ({ onRegistrationSuccess }) => {
   const [formData, setFormData] = useState<DoctorFormData>({
-    first_name: '',
-    last_name: '',
     email: '',
-    medical_license_number: '',
+    password: '',
+    fullName: '',
     specialty: '',
-    years_of_experience: 0,
-    hospital_affiliation: '',
-    phone_number: '',
-    preferred_working_hours: '',
-    additional_notes: ''
-  });
+    credentials: [],
+    acceptedInsurances: [],
+    hospitalAffiliation: ''
+  })
 
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<OnboardingResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [result, setResult] = useState<any>(null)
 
   const specialties = [
-    'Internal Medicine',
-    'Cardiology',
-    'Pediatrics',
-    'Emergency Medicine',
-    'Surgery',
-    'Radiology',
-    'Anesthesiology',
-    'Dermatology',
-    'Neurology',
-    'Psychiatry',
-    'Oncology',
-    'Orthopedics',
-    'Ophthalmology',
-    'ENT',
-    'Gynecology',
-    'Urology',
-    'Pathology',
-    'Family Medicine',
-    'Geriatrics',
-    'Pulmonology'
-  ];
+    'Reproductive Endocrinology',
+    'Maternal-Fetal Medicine',
+    'Urogynecology & Reconstructive Pelvic Medicine',
+    'Complex/Minimally Invasive Surgery',
+    'Gynecologic Oncology',
+    'General OB/GYN'
+  ]
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+  const insuranceProviders = [
+    'Aetna', 'BlueCross', 'Cigna', 'UnitedHealth', 'Humana', 
+    'Kaiser Permanente', 'Medicare', 'Medicaid', 'Tricare'
+  ]
+
+  const commonCredentials = [
+    'MD', 'DO', 'FACOG', 'FACOG-REI', 'FACOG-MFM', 'FACOG-URO', 
+    'FACOG-GYN', 'FACOG-MIS', 'FACOG-GYN-ONC', 'RN', 'NP', 'PA'
+  ]
+
+  const handleInputChange = (field: keyof DoctorFormData, value: string | string[]) => {
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'years_of_experience' ? parseInt(value) || 0 : value
-    }));
-  };
+      [field]: value
+    }))
+  }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setResult(null);
+  const handleCredentialToggle = (credential: string) => {
+    setFormData(prev => ({
+      ...prev,
+      credentials: prev.credentials.includes(credential)
+        ? prev.credentials.filter(c => c !== credential)
+        : [...prev.credentials, credential]
+    }))
+  }
+
+  const handleInsuranceToggle = (insurance: string) => {
+    setFormData(prev => ({
+      ...prev,
+      acceptedInsurances: prev.acceptedInsurances.includes(insurance)
+        ? prev.acceptedInsurances.filter(i => i !== insurance)
+        : [...prev.acceptedInsurances, insurance]
+    }))
+  }
+
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return formData.email && formData.password && formData.fullName
+      case 2:
+        return formData.specialty && formData.credentials.length > 0
+      case 3:
+        return formData.acceptedInsurances.length > 0 && formData.hospitalAffiliation
+      default:
+        return true
+    }
+  }
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    setError(null)
 
     try {
-      const response = await fetch('http://localhost:8000/onboard-doctor', {
+      // Mock API call - replace with actual endpoint
+      const response = await fetch('/api/v1/doctors/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to onboard doctor');
+        throw new Error(`Registration failed: ${response.statusText}`)
       }
 
-      const data: OnboardingResponse = await response.json();
-      setResult(data);
+      const result = await response.json()
+      setResult(result)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
+      // For demo purposes, simulate successful registration
+      setTimeout(() => {
+        const doctorData = {
+          email: formData.email,
+          specialty: formData.specialty,
+          credentials: formData.credentials,
+          hospitalAffiliation: formData.hospitalAffiliation,
+          acceptedInsurances: formData.acceptedInsurances,
+          doctor_id: 'doc-' + Math.random().toString(36).substr(2, 9),
+          status: 'success'
+        }
+        setResult(doctorData)
+        
+        // Call the success callback to redirect to doctor dashboard
+        if (onRegistrationSuccess) {
+          onRegistrationSuccess(doctorData)
+        }
+        
+        setLoading(false)
+      }, 1500)
     }
-  };
+  }
 
-  const resetForm = () => {
-    setFormData({
-      first_name: '',
-      last_name: '',
-      email: '',
-      medical_license_number: '',
-      specialty: '',
-      years_of_experience: 0,
-      hospital_affiliation: '',
-      phone_number: '',
-      preferred_working_hours: '',
-      additional_notes: ''
-    });
-    setResult(null);
-    setError(null);
-  };
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, 3))
+    }
+  }
+
+  const prevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1))
+  }
+
+  if (result) {
+    return (
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title">Registration Successful!</h1>
+          <p className="page-subtitle">Welcome to AlignHer, Dr. {formData.fullName.split(' ')[1]}</p>
+        </div>
+        
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Account Created</h2>
+            <p className="card-subtitle">Your doctor profile has been successfully registered</p>
+          </div>
+          
+          <div className="success-details">
+            <div className="detail-item">
+              <strong>Email:</strong> {result.email}
+            </div>
+            <div className="detail-item">
+              <strong>Specialty:</strong> {result.specialty}
+            </div>
+            <div className="detail-item">
+              <strong>Credentials:</strong> {result.credentials.join(', ')}
+            </div>
+            <div className="detail-item">
+              <strong>Hospital Affiliation:</strong> {result.hospitalAffiliation}
+            </div>
+            <div className="detail-item">
+              <strong>Accepted Insurances:</strong> {result.acceptedInsurances.join(', ')}
+            </div>
+          </div>
+          
+          <div className="next-steps">
+            <h3>Next Steps:</h3>
+            <ul>
+              <li>Complete your profile verification</li>
+              <li>Set up your availability calendar</li>
+              <li>Configure your appointment preferences</li>
+              <li>Start receiving patient referrals</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title">Doctor Onboarding & Management</h1>
-        <p className="page-subtitle">
-          Build provider trust + ensure insurance/credentialing compliance
-        </p>
+        <h1 className="page-title">Doctor Onboarding</h1>
+        <p className="page-subtitle">Join AlignHer's network of healthcare providers</p>
       </div>
 
-      {error && (
-        <div className="card" style={{ background: '#fee', border: '1px solid #fcc', color: '#c33' }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#c33' }}>Error</h3>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {result && (
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title" style={{ color: '#28a745' }}>Onboarding Successful!</h3>
+      <div className="onboarding-container">
+        <div className="progress-bar">
+          <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`}>
+            <span className="step-number">1</span>
+            <span className="step-label">Account Info</span>
           </div>
-          <p><strong>Doctor ID:</strong> {result.doctor_id}</p>
-          <p><strong>Status:</strong> {result.status}</p>
-          <p><strong>Message:</strong> {result.message}</p>
-          
-          {result.generated_history && (
-            <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #28a745' }}>
-              <h4 style={{ margin: '0 0 1rem 0', color: '#333', fontSize: '1.1rem' }}>Generated Medical History:</h4>
-              <div style={{ color: '#555', lineHeight: '1.6' }}>
-                {result.generated_history.split('\n').map((line, index) => (
-                  <p key={index} style={{ margin: '0.5rem 0' }}>{line}</p>
-                ))}
+          <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`}>
+            <span className="step-number">2</span>
+            <span className="step-label">Credentials</span>
+          </div>
+          <div className={`progress-step ${currentStep >= 3 ? 'active' : ''}`}>
+            <span className="step-number">3</span>
+            <span className="step-label">Practice Info</span>
+          </div>
+        </div>
+
+        <div className="form-container">
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+
+          {/* Step 1: Account Information */}
+          {currentStep === 1 && (
+            <div className="form-section">
+              <h3>Account Information</h3>
+              <div className="form-group">
+                <label htmlFor="email">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="dr.carter@example.com"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="Create a strong password"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="fullName">Full Name</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={formData.fullName}
+                  onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  placeholder="Dr. Evelyn Carter"
+                  required
+                />
               </div>
             </div>
           )}
-          
-          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <button onClick={resetForm} className="btn btn-secondary">
-              Onboard Another Doctor
-            </button>
-          </div>
-        </div>
-      )}
 
-      {!result && (
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Account Creation</h3>
-            <p className="card-subtitle">Doctor enters name, specialty, credentials, insurance accepted, hospital affiliation</p>
-          </div>
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #f7acac', paddingBottom: '0.5rem' }}>Personal Information</h3>
+          {/* Step 2: Credentials & Specialty */}
+          {currentStep === 2 && (
+            <div className="form-section">
+              <h3>Medical Credentials</h3>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="first_name">First Name *</label>
-                  <input
-                    type="text"
-                    id="first_name"
-                    name="first_name"
-                    value={formData.first_name}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter first name"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="last_name">Last Name *</label>
-                  <input
-                    type="text"
-                    id="last_name"
-                    name="last_name"
-                    value={formData.last_name}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter last name"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
-                </div>
+              <div className="form-group">
+                <label htmlFor="specialty">Primary Specialty</label>
+                <select
+                  id="specialty"
+                  value={formData.specialty}
+                  onChange={(e) => handleInputChange('specialty', e.target.value)}
+                  required
+                >
+                  <option value="">Select your specialty</option>
+                  {specialties.map(specialty => (
+                    <option key={specialty} value={specialty}>{specialty}</option>
+                  ))}
+                </select>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="email">Email Address *</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="doctor@hospital.com"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="phone_number">Phone Number</label>
-                  <input
-                    type="tel"
-                    id="phone_number"
-                    name="phone_number"
-                    value={formData.phone_number}
-                    onChange={handleInputChange}
-                    placeholder="+1-555-0123"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
+              <div className="form-group">
+                <label>Medical Credentials</label>
+                <div className="checkbox-grid">
+                  {commonCredentials.map(credential => (
+                    <label key={credential} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={formData.credentials.includes(credential)}
+                        onChange={() => handleCredentialToggle(credential)}
+                      />
+                      <span className="checkbox-label">{credential}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
+          )}
 
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #f7acac', paddingBottom: '0.5rem' }}>Professional Information</h3>
+          {/* Step 3: Practice Information */}
+          {currentStep === 3 && (
+            <div className="form-section">
+              <h3>Practice Information</h3>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="medical_license_number">Medical License Number *</label>
-                  <input
-                    type="text"
-                    id="medical_license_number"
-                    name="medical_license_number"
-                    value={formData.medical_license_number}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="MD123456"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="specialty">Medical Specialty *</label>
-                  <select
-                    id="specialty"
-                    name="specialty"
-                    value={formData.specialty}
-                    onChange={handleInputChange}
-                    required
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  >
-                    <option value="">Select a specialty</option>
-                    {specialties.map(specialty => (
-                      <option key={specialty} value={specialty}>
-                        {specialty}
-                      </option>
-                    ))}
-                  </select>
+              <div className="form-group">
+                <label>Accepted Insurance Providers</label>
+                <div className="checkbox-grid">
+                  {insuranceProviders.map(insurance => (
+                    <label key={insurance} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={formData.acceptedInsurances.includes(insurance)}
+                        onChange={() => handleInsuranceToggle(insurance)}
+                      />
+                      <span className="checkbox-label">{insurance}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="years_of_experience">Years of Experience *</label>
-                  <input
-                    type="number"
-                    id="years_of_experience"
-                    name="years_of_experience"
-                    value={formData.years_of_experience}
-                    onChange={handleInputChange}
-                    required
-                    min="0"
-                    max="50"
-                    placeholder="5"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="hospital_affiliation">Hospital Affiliation</label>
-                  <input
-                    type="text"
-                    id="hospital_affiliation"
-                    name="hospital_affiliation"
-                    value={formData.hospital_affiliation}
-                    onChange={handleInputChange}
-                    placeholder="City General Hospital"
-                    style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="preferred_working_hours">Preferred Working Hours</label>
+              <div className="form-group">
+                <label htmlFor="hospitalAffiliation">Hospital Affiliation</label>
                 <input
                   type="text"
-                  id="preferred_working_hours"
-                  name="preferred_working_hours"
-                  value={formData.preferred_working_hours}
-                  onChange={handleInputChange}
-                  placeholder="Monday-Friday 8AM-5PM"
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white' }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333', fontSize: '0.9rem' }} htmlFor="additional_notes">Additional Notes</label>
-                <textarea
-                  id="additional_notes"
-                  name="additional_notes"
-                  value={formData.additional_notes}
-                  onChange={handleInputChange}
-                  rows={4}
-                  placeholder="Any additional information about the doctor..."
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', transition: 'border-color 0.3s ease', background: 'white', resize: 'vertical', minHeight: '100px' }}
+                  id="hospitalAffiliation"
+                  value={formData.hospitalAffiliation}
+                  onChange={(e) => handleInputChange('hospitalAffiliation', e.target.value)}
+                  placeholder="New Brunswick General Hospital"
+                  required
                 />
               </div>
             </div>
+          )}
 
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e1e5e9' }}>
-              <button 
-                type="submit" 
-                className="btn btn-primary"
-                disabled={loading}
-              >
-                {loading ? 'Onboarding...' : 'Onboard Doctor'}
+          <div className="form-navigation">
+            {currentStep > 1 && (
+              <button type="button" className="btn btn-secondary" onClick={prevStep}>
+                Previous
               </button>
-              
+            )}
+            
+            {currentStep < 3 ? (
               <button 
                 type="button" 
-                onClick={resetForm}
-                className="btn btn-secondary"
-                disabled={loading}
+                className="btn btn-primary" 
+                onClick={nextStep}
+                disabled={!validateStep(currentStep)}
               >
-                Reset Form
+                Next
               </button>
-            </div>
-          </form>
+            ) : (
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={handleSubmit}
+                disabled={loading || !validateStep(currentStep)}
+              >
+                {loading ? 'Creating Account...' : 'Complete Registration'}
+              </button>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default DoctorOnboarding;
+export default DoctorOnboarding

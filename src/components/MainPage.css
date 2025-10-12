@@ -108,17 +108,22 @@ html {
 }
 
 .stat-card {
-	background: #f7acac;
+	background: white;
 	padding: 2rem;
 	border-radius: 0;
 	text-align: center;
-	border: none;
-	border-bottom: 3px solid #ff808b;
+	border-bottom: 5px solid #ff808b;
+	border-right: 2px solid lightgray;
+	border-left: 2px solid lightgray;
+	border-top: 2px solid lightgray;
 	transition: all 0.2s ease;
 	border-radius: 25px;
 	box-shadow: none;
 	position: relative;
 	z-index: 1;
+	padding: 1.5rem;
+	border-radius: 8px;
+	text-align: center;
 }
 
 .stat-card:hover {
@@ -131,7 +136,7 @@ html {
 .stat-number {
 	font-size: 3rem;
 	font-weight: 700;
-	color: white;
+	color: #333;
 	margin-bottom: 0.5rem;
 }
 
@@ -181,17 +186,18 @@ html {
 }
 
 .feature-card {
-	background: #f7acac;
+	background: white;
 	padding: 2rem;
 	border-radius: 0;
 	border: none;
 	border-left: 4px solid #ff808b;
-	transition: all 0.2s ease;
+	transition: all 0.5s ease;
 }
 
 .feature-card:hover {
 	border-left-color: #e55a6b;
 	box-shadow: none;
+	background: #f7acac;
 }
 
 .feature-icon {
@@ -261,7 +267,7 @@ html {
 	border-radius: 0;
 	text-align: center;
 	border: none;
-	border-top: 3px solid #ff808b;
+	border-top: 6px solid #ff808b;
 	transition: all 0.2s ease;
 }
 

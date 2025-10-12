@@ -1,0 +1,384 @@
+/* No-Show Prevention Styles */
+.no-show-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.appointments-panel,
+.risk-assessment-panel {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.appointments-panel h3,
+.risk-assessment-panel h3 {
+  color: #333;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #ff808b;
+  padding-bottom: 0.5rem;
+}
+
+.appointments-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.appointment-card {
+  background: #f8f4eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.appointment-card:hover {
+  border-color: #ff808b;
+  background: white;
+}
+
+.appointment-card.selected {
+  border-color: #ff808b;
+  background: white;
+  box-shadow: 0 4px 12px rgba(255, 128, 139, 0.2);
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.appointment-header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.risk-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  color: black;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.appointment-details {
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.detail-item strong {
+  color: #333;
+  margin-right: 0.5rem;
+}
+
+.appointment-status {
+  text-align: right;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.scheduled {
+  background: #ebbad1;
+  color: #333;
+}
+
+.status-badge.confirmed {
+  background: #7ACAC;
+  color: black;
+}
+
+.status-badge.completed {
+  background: #7ACAC;
+  color: black;
+}
+
+.status-badge.no-show {
+  background: #e55a6b;
+  color: black;
+}
+
+.status-badge.cancelled {
+  background: #999;
+  color: black;
+}
+
+.risk-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.risk-score {
+  text-align: center;
+}
+
+.risk-score h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.score-circle-container {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1rem;
+}
+
+.score-circle {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.score-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  fill: #333;
+}
+
+.risk-tier {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.risk-breakdown h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.risk-factor {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.risk-factor span:first-child {
+  min-width: 120px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.factor-bar {
+  flex: 1;
+  height: 8px;
+  background: #e1e5e9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.factor-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.risk-factor span:last-child {
+  min-width: 40px;
+  text-align: right;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.interventions-section {
+  margin-bottom: 2rem;
+}
+
+.interventions-section h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.interventions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.intervention-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f4eb;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ff808b;
+}
+
+.intervention-info h5 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.intervention-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.patient-contact {
+  background: #f8f4eb;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.patient-contact h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.contact-details {
+  margin-bottom: 1rem;
+}
+
+.contact-item {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.contact-item strong {
+  color: #333;
+  margin-right: 0.5rem;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.statistics-panel {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-panel h3 {
+  color: #333;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #ff808b;
+  padding-bottom: 0.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.stat-description {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .risk-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .appointments-panel,
+  .risk-assessment-panel,
+  .statistics-panel {
+    padding: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .intervention-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .intervention-item button {
+    width: 100%;
+  }
+  
+  .contact-actions {
+    flex-direction: column;
+  }
+  
+  .contact-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .no-show-container {
+    padding: 0 0.5rem;
+  }
+  
+  .appointments-panel,
+  .risk-assessment-panel,
+  .statistics-panel {
+    padding: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .appointment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .score-circle-container {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .score-text {
+    font-size: 1rem;
+  }
+}

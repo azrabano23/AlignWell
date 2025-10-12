@@ -1,521 +1,427 @@
 import React, { useState } from 'react'
+import './PatientOnboarding.css'
 
-interface PatientFormData {
+interface Demographics {
   firstName: string
   lastName: string
-  email: string
-  phone: string
   dateOfBirth: string
-  insuranceProvider: string
-  insuranceNumber: string
+  phone: string
+}
+
+interface Insurance {
+  provider: string
+  policyNumber: string
+}
+
+interface Consents {
+  predictiveReminders: boolean
+  voiceFollowUps: boolean
+}
+
+interface PatientFormData {
+  email: string
+  password: string
+  demographics: Demographics
+  insurance: Insurance
   telehealthPreference: boolean
-  emergencyContact: string
-  emergencyPhone: string
+  consents: Consents
 }
 
-interface TriageQuestion {
-  id: string
-  question: string
-  type: 'multiple-choice' | 'text' | 'scale'
-  options?: string[]
-  required: boolean
+interface PatientOnboardingProps {
+  onRegistrationSuccess?: (patientData: any) => void
 }
 
-interface TriageResult {
-  specialty: string
-  urgency: 'stat' | 'soon' | 'medium' | 'routine'
-  confidence: number
-  reasoning: string
-  snomedCodes: string[]
-  icd10Codes: string[]
-}
-
-const PatientOnboarding: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<'demographics' | 'triage' | 'profile' | 'results'>('demographics')
-  const [patientData, setPatientData] = useState<PatientFormData>({
-    firstName: '',
-    lastName: '',
+const PatientOnboarding: React.FC<PatientOnboardingProps> = ({ onRegistrationSuccess }) => {
+  const [formData, setFormData] = useState<PatientFormData>({
     email: '',
-    phone: '',
-    dateOfBirth: '',
-    insuranceProvider: '',
-    insuranceNumber: '',
+    password: '',
+    demographics: {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      phone: ''
+    },
+    insurance: {
+      provider: '',
+      policyNumber: ''
+    },
     telehealthPreference: false,
-    emergencyContact: '',
-    emergencyPhone: ''
+    consents: {
+      predictiveReminders: false,
+      voiceFollowUps: false
+    }
   })
-  
-  const [triageAnswers, setTriageAnswers] = useState<Record<string, string>>({})
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [triageResult, setTriageResult] = useState<TriageResult | null>(null)
-  const [isTriageComplete, setIsTriageComplete] = useState(false)
 
-  const specialties = [
-    'Maternal-fetal Medicine',
-    'Urogynecology & Reconstructive Pelvic Medicine',
-    'Complex/Minimally Invasive Surgery',
-    'Reproductive Endocrinology',
-    'Gynecologic Oncology',
-    'General OB/GYN'
+  const [currentStep, setCurrentStep] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [result, setResult] = useState<any>(null)
+
+  const insuranceProviders = [
+    'Aetna', 'BlueCross', 'Cigna', 'UnitedHealth', 'Humana', 
+    'Kaiser Permanente', 'Medicare', 'Medicaid', 'Tricare'
   ]
 
-  const triageQuestions: TriageQuestion[] = [
-    {
-      id: 'primary_concern',
-      question: 'What is your primary health concern today?',
-      type: 'multiple-choice',
-      options: [
-        'Pregnancy-related concerns',
-        'Irregular menstrual cycles',
-        'Pelvic pain or discomfort',
-        'Urinary incontinence',
-        'Fertility issues',
-        'Menopause symptoms',
-        'Cancer screening/prevention',
-        'Other'
-      ],
-      required: true
-    },
-    {
-      id: 'symptom_duration',
-      question: 'How long have you been experiencing these symptoms?',
-      type: 'multiple-choice',
-      options: [
-        'Less than 24 hours',
-        '1-7 days',
-        '1-4 weeks',
-        '1-6 months',
-        'More than 6 months'
-      ],
-      required: true
-    },
-    {
-      id: 'pain_level',
-      question: 'On a scale of 1-10, how would you rate your current pain level?',
-      type: 'scale',
-      options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-      required: true
-    },
-    {
-      id: 'pregnancy_status',
-      question: 'Are you currently pregnant?',
-      type: 'multiple-choice',
-      options: ['Yes', 'No', 'Unsure'],
-      required: true
-    },
-    {
-      id: 'medical_history',
-      question: 'Do you have any of the following conditions? (Select all that apply)',
-      type: 'multiple-choice',
-      options: [
-        'PCOS (Polycystic Ovary Syndrome)',
-        'Endometriosis',
-        'Diabetes',
-        'High blood pressure',
-        'Thyroid disorders',
-        'Cancer history',
-        'None of the above'
-      ],
-      required: true
-    },
-    {
-      id: 'additional_symptoms',
-      question: 'Are you experiencing any additional symptoms? Please describe.',
-      type: 'text',
-      required: false
-    }
-  ]
-
-  const handleDemographicsChange = (field: keyof PatientFormData, value: string | boolean) => {
-    setPatientData(prev => ({ ...prev, [field]: value }))
-  }
-
-  const handleTriageAnswer = (questionId: string, answer: string) => {
-    setTriageAnswers(prev => ({ ...prev, [questionId]: answer }))
-  }
-
-  const nextTriageQuestion = () => {
-    if (currentQuestionIndex < triageQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1)
+  const handleInputChange = (field: string, value: any) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.')
+      setFormData(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent as keyof PatientFormData],
+          [child]: value
+        }
+      }))
     } else {
-      // Complete triage and generate results
-      generateTriageResult()
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }))
     }
   }
 
-  const prevTriageQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1)
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return formData.email && formData.password
+      case 2:
+        return formData.demographics.firstName && 
+               formData.demographics.lastName && 
+               formData.demographics.dateOfBirth && 
+               formData.demographics.phone
+      case 3:
+        return formData.insurance.provider && formData.insurance.policyNumber
+      case 4:
+        return formData.consents.predictiveReminders || formData.consents.voiceFollowUps
+      default:
+        return true
     }
   }
 
-  const generateTriageResult = () => {
-    // Mock AI triage logic - in real app this would call ElevenLabs API
-    const mockResult: TriageResult = {
-      specialty: 'Reproductive Endocrinology',
-      urgency: 'soon',
-      confidence: 87,
-      reasoning: 'Based on your symptoms of irregular menstrual cycles and fertility concerns, our AI recommends seeing a Reproductive Endocrinology specialist. Your symptoms suggest hormonal imbalances that require specialized care.',
-      snomedCodes: ['44054006', '237600007'],
-      icd10Codes: ['N97.9', 'E28.9']
+  const handleSubmit = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      // Mock API call - replace with actual endpoint
+      const response = await fetch('/api/v1/patients/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Registration failed: ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      setResult(result)
+    } catch (err) {
+      // For demo purposes, simulate successful registration
+      setTimeout(() => {
+        const patientData = {
+          email: formData.email,
+          demographics: formData.demographics,
+          insurance: formData.insurance,
+          telehealthPreference: formData.telehealthPreference,
+          consents: formData.consents,
+          patient_id: 'pat-' + Math.random().toString(36).substr(2, 9),
+          status: 'success'
+        }
+        setResult(patientData)
+        
+        // Call the success callback to redirect to patient dashboard
+        if (onRegistrationSuccess) {
+          onRegistrationSuccess(patientData)
+        }
+        
+        setLoading(false)
+      }, 1500)
     }
-    
-    setTriageResult(mockResult)
-    setIsTriageComplete(true)
-    setCurrentStep('results')
   }
 
-  const getUrgencyColor = (urgency: string) => {
-    switch (urgency) {
-      case 'stat': return 'status-critical'
-      case 'soon': return 'status-high'
-      case 'medium': return 'status-medium'
-      case 'routine': return 'status-low'
-      default: return 'status-low'
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, 4))
     }
   }
 
-  const getUrgencyText = (urgency: string) => {
-    switch (urgency) {
-      case 'stat': return 'STAT (Red Flag) - Immediate attention required'
-      case 'soon': return 'SOON - Within 72 hours'
-      case 'medium': return 'MEDIUM - Within 2 weeks'
-      case 'routine': return 'ROUTINE - Standard scheduling'
-      default: return 'ROUTINE'
-    }
+  const prevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1))
+  }
+
+  if (result) {
+    return (
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title">Registration Successful!</h1>
+          <p className="page-subtitle">Welcome to AlignHer, {formData.demographics.firstName}</p>
+        </div>
+        
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Account Created</h2>
+            <p className="card-subtitle">Your patient profile has been successfully registered</p>
+          </div>
+          
+          <div className="success-details">
+            <div className="detail-item">
+              <strong>Email:</strong> {result.email}
+            </div>
+            <div className="detail-item">
+              <strong>Name:</strong> {result.demographics.firstName} {result.demographics.lastName}
+            </div>
+            <div className="detail-item">
+              <strong>Phone:</strong> {result.demographics.phone}
+            </div>
+            <div className="detail-item">
+              <strong>Insurance:</strong> {result.insurance.provider} - {result.insurance.policyNumber}
+            </div>
+            <div className="detail-item">
+              <strong>Telehealth Preference:</strong> {result.telehealthPreference ? 'Yes' : 'No'}
+            </div>
+          </div>
+          
+          <div className="next-steps">
+            <h3>Next Steps:</h3>
+            <ul>
+              <li>Complete your health questionnaire</li>
+              <li>Schedule your first appointment</li>
+              <li>Set up your patient portal access</li>
+              <li>Review your care preferences</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="page-container">
       <div className="page-header">
         <h1 className="page-title">Patient Onboarding</h1>
-        <p className="page-subtitle">
-          Reduce friction + ensure right subspecialist referral with AI-powered smart triage
-        </p>
+        <p className="page-subtitle">Join AlignHer for personalized women's healthcare</p>
       </div>
 
-      {/* Progress Indicator */}
-      <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {['demographics', 'triage', 'profile', 'results'].map((step, index) => (
-              <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
-                <div 
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    background: currentStep === step ? '#667eea' : '#e9ecef',
-                    color: currentStep === step ? 'white' : '#6c757d',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  {index + 1}
-                </div>
-                <span style={{ marginLeft: '0.5rem', color: currentStep === step ? '#667eea' : '#6c757d' }}>
-                  {step.charAt(0).toUpperCase() + step.slice(1)}
-                </span>
-                {index < 3 && (
-                  <div style={{ width: '50px', height: '2px', background: '#e9ecef', margin: '0 1rem' }} />
-                )}
-              </div>
-            ))}
+      <div className="onboarding-container">
+        <div className="progress-bar">
+          <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`}>
+            <span className="step-number">1</span>
+            <span className="step-label">Account</span>
+          </div>
+          <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`}>
+            <span className="step-number">2</span>
+            <span className="step-label">Demographics</span>
+          </div>
+          <div className={`progress-step ${currentStep >= 3 ? 'active' : ''}`}>
+            <span className="step-number">3</span>
+            <span className="step-label">Insurance</span>
+          </div>
+          <div className={`progress-step ${currentStep >= 4 ? 'active' : ''}`}>
+            <span className="step-number">4</span>
+            <span className="step-label">Preferences</span>
           </div>
         </div>
-      </div>
 
-      {currentStep === 'demographics' && (
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Account Creation</h3>
-            <p className="card-subtitle">Patient enters demographics, insurance, telehealth preference</p>
-          </div>
-          
-          <form onSubmit={(e) => { e.preventDefault(); setCurrentStep('triage') }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>First Name *</label>
-                <input
-                  type="text"
-                  value={patientData.firstName}
-                  onChange={(e) => handleDemographicsChange('firstName', e.target.value)}
-                  required
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
-                />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>Last Name *</label>
-                <input
-                  type="text"
-                  value={patientData.lastName}
-                  onChange={(e) => handleDemographicsChange('lastName', e.target.value)}
-                  required
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
-                />
-              </div>
+        <div className="form-container">
+          {error && (
+            <div className="error-message">
+              {error}
             </div>
+          )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>Email *</label>
+          {/* Step 1: Account Information */}
+          {currentStep === 1 && (
+            <div className="form-section">
+              <h3>Create Your Account</h3>
+              <div className="form-group">
+                <label htmlFor="email">Email Address</label>
                 <input
                   type="email"
-                  value={patientData.email}
-                  onChange={(e) => handleDemographicsChange('email', e.target.value)}
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="jane.doe@example.com"
                   required
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
                 />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>Phone *</label>
+              
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
                 <input
-                  type="tel"
-                  value={patientData.phone}
-                  onChange={(e) => handleDemographicsChange('phone', e.target.value)}
+                  type="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="Create a strong password"
                   required
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
                 />
               </div>
             </div>
+          )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>Date of Birth *</label>
+          {/* Step 2: Demographics */}
+          {currentStep === 2 && (
+            <div className="form-section">
+              <h3>Personal Information</h3>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="firstName">First Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={formData.demographics.firstName}
+                    onChange={(e) => handleInputChange('demographics.firstName', e.target.value)}
+                    placeholder="Jane"
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    value={formData.demographics.lastName}
+                    onChange={(e) => handleInputChange('demographics.lastName', e.target.value)}
+                    placeholder="Doe"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dateOfBirth">Date of Birth</label>
                 <input
                   type="date"
-                  value={patientData.dateOfBirth}
-                  onChange={(e) => handleDemographicsChange('dateOfBirth', e.target.value)}
+                  id="dateOfBirth"
+                  value={formData.demographics.dateOfBirth}
+                  onChange={(e) => handleInputChange('demographics.dateOfBirth', e.target.value)}
                   required
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
                 />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>Insurance Provider *</label>
-                <select
-                  value={patientData.insuranceProvider}
-                  onChange={(e) => handleDemographicsChange('insuranceProvider', e.target.value)}
+
+              <div className="form-group">
+                <label htmlFor="phone">Phone Number</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  value={formData.demographics.phone}
+                  onChange={(e) => handleInputChange('demographics.phone', e.target.value)}
+                  placeholder="908-555-1234"
                   required
-                  style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Insurance */}
+          {currentStep === 3 && (
+            <div className="form-section">
+              <h3>Insurance Information</h3>
+              
+              <div className="form-group">
+                <label htmlFor="insuranceProvider">Insurance Provider</label>
+                <select
+                  id="insuranceProvider"
+                  value={formData.insurance.provider}
+                  onChange={(e) => handleInputChange('insurance.provider', e.target.value)}
+                  required
                 >
-                  <option value="">Select insurance</option>
-                  <option value="Aetna">Aetna</option>
-                  <option value="Blue Cross Blue Shield">Blue Cross Blue Shield</option>
-                  <option value="Cigna">Cigna</option>
-                  <option value="UnitedHealth">UnitedHealth</option>
-                  <option value="Medicare">Medicare</option>
-                  <option value="Medicaid">Medicaid</option>
+                  <option value="">Select your insurance provider</option>
+                  {insuranceProviders.map(provider => (
+                    <option key={provider} value={provider}>{provider}</option>
+                  ))}
                 </select>
               </div>
-            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
-              <label style={{ marginBottom: '0.5rem', fontWeight: '600', color: '#333' }}>Insurance Number *</label>
-              <input
-                type="text"
-                value={patientData.insuranceNumber}
-                onChange={(e) => handleDemographicsChange('insuranceNumber', e.target.value)}
-                required
-                style={{ padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem' }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-              <input
-                type="checkbox"
-                id="telehealth"
-                checked={patientData.telehealthPreference}
-                onChange={(e) => handleDemographicsChange('telehealthPreference', e.target.checked)}
-                style={{ marginRight: '0.5rem' }}
-              />
-              <label htmlFor="telehealth" style={{ fontWeight: '600', color: '#333' }}>
-                I prefer telehealth appointments when possible
-              </label>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-              <button type="submit" className="btn btn-primary">
-                Continue to Smart Triage →
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {currentStep === 'triage' && (
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Smart Triage (Voice + Web)</h3>
-            <p className="card-subtitle">ElevenLabs voice agent OR chatbot runs stepwise questionnaire</p>
-          </div>
-          
-          <div style={{ marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h4 style={{ margin: '0', color: '#333' }}>
-                Question {currentQuestionIndex + 1} of {triageQuestions.length}
-              </h4>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button 
-                  className="btn btn-secondary"
-                  onClick={prevTriageQuestion}
-                  disabled={currentQuestionIndex === 0}
-                  style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}
-                >
-                  ← Previous
-                </button>
-                <button 
-                  className="btn btn-primary"
-                  onClick={nextTriageQuestion}
-                  disabled={!triageAnswers[triageQuestions[currentQuestionIndex].id]}
-                  style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}
-                >
-                  Next →
-                </button>
-              </div>
-            </div>
-            
-            <div style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
-              <h4 style={{ margin: '0 0 1rem 0', color: '#333' }}>
-                {triageQuestions[currentQuestionIndex].question}
-              </h4>
-              
-              {triageQuestions[currentQuestionIndex].type === 'multiple-choice' && (
-                <div style={{ display: 'grid', gap: '0.5rem' }}>
-                  {triageQuestions[currentQuestionIndex].options?.map((option) => (
-                    <label key={option} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                      <input
-                        type="radio"
-                        name={triageQuestions[currentQuestionIndex].id}
-                        value={option}
-                        checked={triageAnswers[triageQuestions[currentQuestionIndex].id] === option}
-                        onChange={(e) => handleTriageAnswer(triageQuestions[currentQuestionIndex].id, e.target.value)}
-                        style={{ marginRight: '0.5rem' }}
-                      />
-                      {option}
-                    </label>
-                  ))}
-                </div>
-              )}
-              
-              {triageQuestions[currentQuestionIndex].type === 'scale' && (
-                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                  {triageQuestions[currentQuestionIndex].options?.map((value) => (
-                    <label key={value} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                      <input
-                        type="radio"
-                        name={triageQuestions[currentQuestionIndex].id}
-                        value={value}
-                        checked={triageAnswers[triageQuestions[currentQuestionIndex].id] === value}
-                        onChange={(e) => handleTriageAnswer(triageQuestions[currentQuestionIndex].id, e.target.value)}
-                        style={{ marginRight: '0.25rem' }}
-                      />
-                      {value}
-                    </label>
-                  ))}
-                </div>
-              )}
-              
-              {triageQuestions[currentQuestionIndex].type === 'text' && (
-                <textarea
-                  value={triageAnswers[triageQuestions[currentQuestionIndex].id] || ''}
-                  onChange={(e) => handleTriageAnswer(triageQuestions[currentQuestionIndex].id, e.target.value)}
-                  placeholder="Please describe your symptoms..."
-                  style={{ width: '100%', padding: '0.75rem', border: '2px solid #e1e5e9', borderRadius: '6px', fontSize: '1rem', minHeight: '100px' }}
+              <div className="form-group">
+                <label htmlFor="policyNumber">Policy Number</label>
+                <input
+                  type="text"
+                  id="policyNumber"
+                  value={formData.insurance.policyNumber}
+                  onChange={(e) => handleInputChange('insurance.policyNumber', e.target.value)}
+                  placeholder="AET123456789"
+                  required
                 />
-              )}
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {currentStep === 'results' && triageResult && (
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Triage Results</h3>
-            <p className="card-subtitle">AI-powered specialty recommendation and urgency assessment</p>
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-            <div>
-              <h4 style={{ marginBottom: '1rem', color: '#333' }}>Recommended Specialty</h4>
-              <div style={{ background: '#e3f2fd', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-                <h3 style={{ margin: '0', color: '#1976d2' }}>{triageResult.specialty}</h3>
-                <p style={{ margin: '0.5rem 0 0 0', color: '#1976d2' }}>
-                  Confidence: {triageResult.confidence}%
-                </p>
+          {/* Step 4: Preferences */}
+          {currentStep === 4 && (
+            <div className="form-section">
+              <h3>Care Preferences</h3>
+              
+              <div className="form-group">
+                <label className="checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={formData.telehealthPreference}
+                    onChange={(e) => handleInputChange('telehealthPreference', e.target.checked)}
+                  />
+                  <span className="checkbox-label">I prefer telehealth appointments when possible</span>
+                </label>
+              </div>
+
+              <div className="form-group">
+                <label>Communication Preferences</label>
+                <div className="checkbox-group">
+                  <label className="checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={formData.consents.predictiveReminders}
+                      onChange={(e) => handleInputChange('consents.predictiveReminders', e.target.checked)}
+                    />
+                    <span className="checkbox-label">Receive predictive health reminders</span>
+                  </label>
+                  
+                  <label className="checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={formData.consents.voiceFollowUps}
+                      onChange={(e) => handleInputChange('consents.voiceFollowUps', e.target.checked)}
+                    />
+                    <span className="checkbox-label">Receive voice follow-up calls</span>
+                  </label>
+                </div>
               </div>
             </div>
+          )}
+
+          <div className="form-navigation">
+            {currentStep > 1 && (
+              <button type="button" className="btn btn-secondary" onClick={prevStep}>
+                Previous
+              </button>
+            )}
             
-            <div>
-              <h4 style={{ marginBottom: '1rem', color: '#333' }}>Urgency Level</h4>
-              <div style={{ background: '#fff3e0', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-                <span className={`status-badge ${getUrgencyColor(triageResult.urgency)}`} style={{ fontSize: '1rem', padding: '0.5rem 1rem' }}>
-                  {triageResult.urgency.toUpperCase()}
-                </span>
-                <p style={{ margin: '0.5rem 0 0 0', color: '#f57c00' }}>
-                  {getUrgencyText(triageResult.urgency)}
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div style={{ marginBottom: '2rem' }}>
-            <h4 style={{ marginBottom: '1rem', color: '#333' }}>AI Reasoning</h4>
-            <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #667eea' }}>
-              <p style={{ margin: '0', lineHeight: '1.6' }}>{triageResult.reasoning}</p>
-            </div>
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-            <div>
-              <h4 style={{ marginBottom: '1rem', color: '#333' }}>SNOMED Codes</h4>
-              <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
-                {triageResult.snomedCodes.map((code, index) => (
-                  <span key={index} style={{ 
-                    background: '#e9ecef', 
-                    padding: '0.25rem 0.5rem', 
-                    borderRadius: '4px', 
-                    margin: '0.25rem', 
-                    display: 'inline-block',
-                    fontSize: '0.9rem'
-                  }}>
-                    {code}
-                  </span>
-                ))}
-              </div>
-            </div>
-            
-            <div>
-              <h4 style={{ marginBottom: '1rem', color: '#333' }}>ICD-10 Codes</h4>
-              <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px' }}>
-                {triageResult.icd10Codes.map((code, index) => (
-                  <span key={index} style={{ 
-                    background: '#e9ecef', 
-                    padding: '0.25rem 0.5rem', 
-                    borderRadius: '4px', 
-                    margin: '0.25rem', 
-                    display: 'inline-block',
-                    fontSize: '0.9rem'
-                  }}>
-                    {code}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-            <button className="btn btn-primary">
-              Schedule Appointment →
-            </button>
-            <button className="btn btn-secondary" onClick={() => setCurrentStep('demographics')}>
-              Start Over
-            </button>
+            {currentStep < 4 ? (
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={nextStep}
+                disabled={!validateStep(currentStep)}
+              >
+                Next
+              </button>
+            ) : (
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={handleSubmit}
+                disabled={loading || !validateStep(currentStep)}
+              >
+                {loading ? 'Creating Account...' : 'Complete Registration'}
+              </button>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

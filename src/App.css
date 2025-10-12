@@ -101,7 +101,7 @@ body {
 
 .btn-primary {
 	background: #ff808b;
-	color: white;
+	color: black;
 	border: 2px solid #ff808b;
 }
 
@@ -114,7 +114,7 @@ body {
 
 .btn-secondary {
 	background: #ebbad1;
-	color: white;
+	color: black;
 	border: 2px solid #ebbad1;
 }
 
@@ -127,7 +127,7 @@ body {
 
 .btn-success {
 	background: #ff808b;
-	color: white;
+	color: black;
 	border: 2px solid #ff808b;
 }
 
@@ -153,7 +153,7 @@ body {
 
 .btn-danger {
 	background: #e55a6b;
-	color: white;
+	color: black;
 	border: 2px solid #e55a6b;
 }
 
@@ -181,17 +181,17 @@ body {
 
 .status-medium {
 	background: #ff808b;
-	color: white;
+	color: black;
 }
 
 .status-high {
 	background: #d4a5c7;
-	color: white;
+	color: black;
 }
 
 .status-critical {
 	background: #e55a6b;
-	color: white;
+	color: black;
 }
 
 /* Loading states */

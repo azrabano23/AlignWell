@@ -98,11 +98,11 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 		{ number: "87%", label: "Auto-Refill Rate", description: "Slot utilization efficiency" },
 		{ number: "92%", label: "Follow-up Rate", description: "Patient engagement success" },
 	];
-
+	const x = Date.now();
 	return (
 		<div className="page-container">
 			{/* Hero Section */}
-			<div className="hero-section" style={{ backgroundImage: `url(${WomenSvg}?${Date.now()})` }}>
+			<div className="hero-section" style={{ backgroundImage: `url(${WomenSvg}?${x})`}}>
 				<div className="hero-content">
 					<h1 className="hero-title">AlignHer</h1>
 					<p className="hero-subtitle">Women's Health Care Coordination Platform</p>
@@ -190,28 +190,40 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 						<p>Provider registration and credentialing</p>
 					</div>
 
-					<div className="nav-card" onClick={() => setCurrentView("doctor-dashboard")}>
-						<div className="nav-icon">DB</div>
-						<h3>Doctor Dashboard</h3>
-						<p>Appointment management and analytics</p>
-					</div>
+                  <div className="nav-card" onClick={() => setCurrentView("doctor-dashboard")}>
+                    <div className="nav-icon">DB</div>
+                    <h3>Doctor Dashboard</h3>
+                    <p>Provider analytics and management</p>
+                  </div>
+
+                  <div className="nav-card" onClick={() => setCurrentView("patient-dashboard")}>
+                    <div className="nav-icon">PD</div>
+                    <h3>Patient Dashboard</h3>
+                    <p>Personal health management</p>
+                  </div>
 
 					<div className="nav-card" onClick={() => setCurrentView("patient-onboarding")}>
 						<div className="nav-icon">PT</div>
 						<h3>Patient Onboarding</h3>
-						<p>Smart triage and specialty mapping</p>
+						<p>Demographics, insurance, and preferences</p>
+					</div>
+
+					<div className="nav-card" onClick={() => setCurrentView("smart-triage")}>
+						<div className="nav-icon">AI</div>
+						<h3>Smart Triage</h3>
+						<p>AI-powered symptom assessment</p>
 					</div>
 
 					<div className="nav-card" onClick={() => setCurrentView("appointment-scheduling")}>
 						<div className="nav-icon">SC</div>
 						<h3>Appointment Scheduling</h3>
-						<p>Intelligent slot matching</p>
+						<p>Calendar integration and slot matching</p>
 					</div>
 
-					<div className="nav-card" onClick={() => setCurrentView("risk-management")}>
-						<div className="nav-icon">RS</div>
-						<h3>Risk Management</h3>
-						<p>No-show prevention strategies</p>
+					<div className="nav-card" onClick={() => setCurrentView("no-show-prevention")}>
+						<div className="nav-icon">NS</div>
+						<h3>No-Show Prevention</h3>
+						<p>Risk assessment and interventions</p>
 					</div>
 
 					<div className="nav-card" onClick={() => setCurrentView("cancellation-cascade")}>

@@ -5,27 +5,45 @@ import MainPage from './components/MainPage'
 import DoctorOnboarding from './components/DoctorOnboarding'
 import DoctorDashboard from './components/DoctorDashboard'
 import PatientOnboarding from './components/PatientOnboarding'
+import PatientDashboard from './components/PatientDashboard'
+import SmartTriage from './components/SmartTriage'
 import AppointmentScheduling from './components/AppointmentScheduling'
 import RiskManagement from './components/RiskManagement'
 import CancellationCascade from './components/CancellationCascade'
 import PredictiveFollowups from './components/PredictiveFollowups'
+import NoShowPrevention from './components/NoShowPrevention'
 import DemoFlow from './components/DemoFlow'
 
-type ViewType = 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'appointment-scheduling' | 'risk-management' | 'cancellation-cascade' | 'predictive-followups' | 'demo-flow'
+type ViewType = 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'risk-management' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention' | 'demo-flow'
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('main')
+  const [userRole, setUserRole] = useState<'doctor' | 'patient' | null>(null)
+
+  const handleDoctorRegistrationSuccess = (doctorData: any) => {
+    setUserRole('doctor')
+    setCurrentView('doctor-dashboard')
+  }
+
+  const handlePatientRegistrationSuccess = (patientData: any) => {
+    setUserRole('patient')
+    setCurrentView('patient-dashboard')
+  }
 
   const renderCurrentView = () => {
     switch (currentView) {
       case 'main':
         return <MainPage setCurrentView={setCurrentView} />
       case 'doctor-onboarding':
-        return <DoctorOnboarding />
+        return <DoctorOnboarding onRegistrationSuccess={handleDoctorRegistrationSuccess} />
       case 'doctor-dashboard':
         return <DoctorDashboard />
       case 'patient-onboarding':
-        return <PatientOnboarding />
+        return <PatientOnboarding onRegistrationSuccess={handlePatientRegistrationSuccess} />
+      case 'patient-dashboard':
+        return <PatientDashboard />
+      case 'smart-triage':
+        return <SmartTriage />
       case 'appointment-scheduling':
         return <AppointmentScheduling />
       case 'risk-management':
@@ -34,6 +52,8 @@ function App() {
         return <CancellationCascade />
       case 'predictive-followups':
         return <PredictiveFollowups />
+      case 'no-show-prevention':
+        return <NoShowPrevention />
       case 'demo-flow':
         return <DemoFlow />
       default:
@@ -43,7 +63,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header currentView={currentView} setCurrentView={setCurrentView} />
+      <Header currentView={currentView} setCurrentView={setCurrentView} userRole={userRole} />
       <main className="main-content">
         {renderCurrentView()}
       </main>

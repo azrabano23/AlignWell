@@ -284,7 +284,7 @@ const CancellationCascade: React.FC = () => {
                 <strong>Cancelled at:</strong> {new Date(appointment.cancelledAt).toLocaleString()}
               </div>
               
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem'}}>
                 {!activeCascades.includes(appointment.id) ? (
                   <button 
                     className="btn btn-primary"

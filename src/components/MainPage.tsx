@@ -1,5 +1,6 @@
 import React from 'react'
 import './MainPage.css'
+import groupImage from './group.png'
 
 interface FeatureCard {
   icon: string
@@ -101,7 +102,7 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <div className="hero-section">
+      <div className="hero-section" style={{ backgroundImage: `url(${groupImage})` }}>
         <div className="hero-content">
           <h1 className="hero-title">AlignHer</h1>
           <p className="hero-subtitle">Women's Health Care Coordination Platform</p>

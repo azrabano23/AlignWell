@@ -8,6 +8,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
   const navigationItems = [
+    { id: 'main', label: 'Home', icon: '🏠' },
     { id: 'doctor-onboarding', label: 'Doctor Onboarding', icon: '👨‍⚕️' },
     { id: 'doctor-dashboard', label: 'Doctor Dashboard', icon: '📊' },
     { id: 'patient-onboarding', label: 'Patient Onboarding', icon: '👩‍⚕️' },
@@ -21,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo">
+        <div className="logo" onClick={() => setCurrentView('main')} style={{ cursor: 'pointer' }}>
           <h1>AlignHer</h1>
           <span className="tagline">Women's Health Care Coordination</span>
         </div>

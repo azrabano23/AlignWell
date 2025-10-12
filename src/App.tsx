@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
+import MainPage from './components/MainPage'
 import DoctorOnboarding from './components/DoctorOnboarding'
 import DoctorDashboard from './components/DoctorDashboard'
 import PatientOnboarding from './components/PatientOnboarding'
@@ -10,13 +11,15 @@ import CancellationCascade from './components/CancellationCascade'
 import PredictiveFollowups from './components/PredictiveFollowups'
 import DemoFlow from './components/DemoFlow'
 
-type ViewType = 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'appointment-scheduling' | 'risk-management' | 'cancellation-cascade' | 'predictive-followups' | 'demo-flow'
+type ViewType = 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'appointment-scheduling' | 'risk-management' | 'cancellation-cascade' | 'predictive-followups' | 'demo-flow'
 
 function App() {
-  const [currentView, setCurrentView] = useState<ViewType>('doctor-onboarding')
+  const [currentView, setCurrentView] = useState<ViewType>('main')
 
   const renderCurrentView = () => {
     switch (currentView) {
+      case 'main':
+        return <MainPage setCurrentView={setCurrentView} />
       case 'doctor-onboarding':
         return <DoctorOnboarding />
       case 'doctor-dashboard':
@@ -34,7 +37,7 @@ function App() {
       case 'demo-flow':
         return <DemoFlow />
       default:
-        return <DoctorOnboarding />
+        return <MainPage setCurrentView={setCurrentView} />
     }
   }
 

@@ -1,5 +1,5 @@
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -7,6 +7,7 @@
 }
 
 .header-container {
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -88,11 +89,15 @@
 
 .main-content {
   min-height: calc(100vh - 80px);
-  background: #f8f9fa;
+  background: #f8f4eb;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
+  .header-container {
+    padding: 0 0.75rem;
+  }
+  
   .nav-label {
     font-size: 0.7rem;
   }
@@ -106,7 +111,7 @@
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;
-    padding: 1rem;
+    padding: 1rem 0.75rem;
   }
   
   .logo {
@@ -143,6 +148,10 @@
 }
 
 @media (max-width: 480px) {
+  .header-container {
+    padding: 0.75rem 0.5rem;
+  }
+  
   .nav-items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

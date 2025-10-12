@@ -10,8 +10,21 @@ interface FeatureCard {
 }
 
 interface MainPageProps {
-	setCurrentView: (view: 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention') => void;
+	setCurrentView: (
+		view:
+			| "main"
+			| "doctor-onboarding"
+			| "doctor-dashboard"
+			| "patient-onboarding"
+			| "patient-dashboard"
+			| "smart-triage"
+			| "appointment-scheduling"
+			| "cancellation-cascade"
+			| "predictive-followups"
+			| "no-show-prevention"
+	) => void;
 }
+const x = Date.now();
 
 const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 	const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -104,20 +117,19 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 	};
 
 	const doctorDropdownItems = [
-		{ id: 'doctor-onboarding', label: 'Doctor Onboarding' },
-		{ id: 'doctor-dashboard', label: 'Doctor Dashboard' }
+		{ id: "doctor-onboarding", label: "Doctor Onboarding" },
+		{ id: "doctor-dashboard", label: "Doctor Dashboard" },
 	];
 
 	const patientDropdownItems = [
-		{ id: 'patient-onboarding', label: 'Patient Onboarding' },
-		{ id: 'patient-dashboard', label: 'Patient Dashboard' }
+		{ id: "patient-onboarding", label: "Patient Onboarding" },
+		{ id: "patient-dashboard", label: "Patient Dashboard" },
 	];
 
-	const x = Date.now();
 	return (
 		<div className="page-container">
 			{/* Hero Section */}
-			<div className="hero-section" style={{ backgroundImage: `url(${WomenSvg}?${x})`}}>
+			<div className="hero-section" style={{ backgroundImage: `url(${WomenSvg}?${x})` }}>
 				<div className="hero-content">
 					<h1 className="hero-title">AlignHer</h1>
 					<p className="hero-subtitle">Women's Health Care Coordination Platform</p>
@@ -128,21 +140,33 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 					<div className="hero-dropdown">
 						<div className="hero-dropdown-container">
 							<button
-								className={`hero-dropdown-trigger ${activeDropdown === 'hero-users' ? 'active' : ''}`}
-								onClick={() => handleDropdownToggle('hero-users')}
-							>
+								className={`hero-dropdown-trigger ${activeDropdown === "hero-users" ? "active" : ""}`}
+								onClick={() => handleDropdownToggle("hero-users")}>
 								<span>Get Started</span>
 								<span className="dropdown-arrow">▼</span>
 							</button>
-							<div className={`hero-dropdown-menu ${activeDropdown === 'hero-users' ? 'show' : ''}`}>
+							<div className={`hero-dropdown-menu ${activeDropdown === "hero-users" ? "show" : ""}`}>
 								<div className="dropdown-section">
 									<div className="dropdown-section-title">For Doctors</div>
 									{doctorDropdownItems.map((item) => (
 										<button
 											key={item.id}
 											className="dropdown-item"
-											onClick={() => setCurrentView(item.id as 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention')}
-										>
+											onClick={() =>
+												setCurrentView(
+													item.id as
+														| "main"
+														| "doctor-onboarding"
+														| "doctor-dashboard"
+														| "patient-onboarding"
+														| "patient-dashboard"
+														| "smart-triage"
+														| "appointment-scheduling"
+														| "cancellation-cascade"
+														| "predictive-followups"
+														| "no-show-prevention"
+												)
+											}>
 											{item.label}
 										</button>
 									))}
@@ -153,8 +177,21 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 										<button
 											key={item.id}
 											className="dropdown-item"
-											onClick={() => setCurrentView(item.id as 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention')}
-										>
+											onClick={() =>
+												setCurrentView(
+													item.id as
+														| "main"
+														| "doctor-onboarding"
+														| "doctor-dashboard"
+														| "patient-onboarding"
+														| "patient-dashboard"
+														| "smart-triage"
+														| "appointment-scheduling"
+														| "cancellation-cascade"
+														| "predictive-followups"
+														| "no-show-prevention"
+												)
+											}>
 											{item.label}
 										</button>
 									))}
@@ -245,21 +282,33 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 						<p>Provider and patient management</p>
 						<div className="dropdown-container">
 							<button
-								className={`dropdown-trigger ${activeDropdown === 'users' ? 'active' : ''}`}
-								onClick={() => handleDropdownToggle('users')}
-							>
+								className={`dropdown-trigger ${activeDropdown === "users" ? "active" : ""}`}
+								onClick={() => handleDropdownToggle("users")}>
 								<span>Select User Type</span>
 								<span className="dropdown-arrow">▼</span>
 							</button>
-							<div className={`dropdown-menu ${activeDropdown === 'users' ? 'show' : ''}`}>
+							<div className={`dropdown-menu ${activeDropdown === "users" ? "show" : ""}`}>
 								<div className="dropdown-section">
 									<div className="dropdown-section-title">Doctors</div>
 									{doctorDropdownItems.map((item) => (
 										<button
 											key={item.id}
 											className="dropdown-item"
-											onClick={() => setCurrentView(item.id as 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention')}
-										>
+											onClick={() =>
+												setCurrentView(
+													item.id as
+														| "main"
+														| "doctor-onboarding"
+														| "doctor-dashboard"
+														| "patient-onboarding"
+														| "patient-dashboard"
+														| "smart-triage"
+														| "appointment-scheduling"
+														| "cancellation-cascade"
+														| "predictive-followups"
+														| "no-show-prevention"
+												)
+											}>
 											{item.label}
 										</button>
 									))}
@@ -270,8 +319,21 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
 										<button
 											key={item.id}
 											className="dropdown-item"
-											onClick={() => setCurrentView(item.id as 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention')}
-										>
+											onClick={() =>
+												setCurrentView(
+													item.id as
+														| "main"
+														| "doctor-onboarding"
+														| "doctor-dashboard"
+														| "patient-onboarding"
+														| "patient-dashboard"
+														| "smart-triage"
+														| "appointment-scheduling"
+														| "cancellation-cascade"
+														| "predictive-followups"
+														| "no-show-prevention"
+												)
+											}>
 											{item.label}
 										</button>
 									))}

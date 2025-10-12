@@ -1,0 +1,12 @@
+Condition,Symptoms,Recommended Procedure,Doctor Needed,Urgency
+Common Cold,"Runny nose, cough","Rest, fluids",No,Self-Care
+Strep Throat,"Sore throat, fever",Antibiotics,Yes,Urgent
+Appendicitis,"Abdominal pain",Appendectomy,Yes,Emergency
+Sprained Ankle,"Swelling, pain",R.I.C.E.,Yes,Routine
+Pregnancy-related concerns,"Missed period, nausea","Pregnancy test, OB/GYN consultation",Yes,Routine
+Irregular menstrual cycles,"Irregular periods, hormonal imbalance","Hormone level testing, ultrasound",Yes,Soon
+Pelvic pain or discomfort,"Chronic pelvic pain, cramps","Pelvic exam, imaging",Yes,Soon
+Urinary incontinence,"Leaking urine, frequent urination","Urodynamic testing, physical therapy",Yes,Routine
+Fertility issues,"Difficulty conceiving","Fertility testing, consultation with RE",Yes,Soon
+Menopause symptoms,"Hot flashes, night sweats","Hormone replacement therapy, lifestyle changes",Yes,Routine
+Cancer screening/prevention,"Family history, abnormal results","Genetic counseling, regular screenings",Yes,Urgent

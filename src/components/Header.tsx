@@ -1,5 +1,6 @@
 import React from 'react'
 import './Header.css'
+import logoImage from './logos.png'
 
 interface HeaderProps {
   currentView: string
@@ -8,23 +9,25 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
   const navigationItems = [
-    { id: 'main', label: 'Home', icon: 'HM' },
-    { id: 'doctor-onboarding', label: 'Doctor Onboarding', icon: 'MD' },
-    { id: 'doctor-dashboard', label: 'Doctor Dashboard', icon: 'DB' },
-    { id: 'patient-onboarding', label: 'Patient Onboarding', icon: 'PT' },
-    { id: 'appointment-scheduling', label: 'Scheduling', icon: 'SC' },
-    { id: 'risk-management', label: 'Risk Management', icon: 'RS' },
-    { id: 'cancellation-cascade', label: 'Cancellation Cascade', icon: 'CC' },
-    { id: 'predictive-followups', label: 'Follow-ups', icon: 'PF' },
-    { id: 'demo-flow', label: 'Demo Flow', icon: 'DF' }
+    { id: 'main', label: 'Home',  },
+    { id: 'doctor-onboarding', label: 'Doctor Onboarding',  },
+    { id: 'doctor-dashboard', label: 'Doctor Dashboard', },
+    { id: 'patient-onboarding', label: 'Patient Onboarding',  },
+    { id: 'appointment-scheduling', label: 'Scheduling',  },
+    { id: 'risk-management', label: 'Risk Management',  },
+    { id: 'cancellation-cascade', label: 'Cancellation Cascade',  },
+    { id: 'predictive-followups', label: 'Follow-ups',  },
+    { id: 'demo-flow', label: 'Demo Flow', }
   ]
 
   return (
     <header className="header">
       <div className="header-container">
         <div className="logo" onClick={() => setCurrentView('main')} style={{ cursor: 'pointer' }}>
-          <h1>AlignHer</h1>
-          <span className="tagline">Women's Health Care Coordination</span>
+          <img src={logoImage} alt="AlignHer Logo" className="header-logo" />
+          <div className="logo-text">
+            
+          </div>
         </div>
         
         <nav className="navigation">

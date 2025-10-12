@@ -8,13 +8,11 @@ import PatientOnboarding from './components/PatientOnboarding'
 import PatientDashboard from './components/PatientDashboard'
 import SmartTriage from './components/SmartTriage'
 import AppointmentScheduling from './components/AppointmentScheduling'
-import RiskManagement from './components/RiskManagement'
 import CancellationCascade from './components/CancellationCascade'
 import PredictiveFollowups from './components/PredictiveFollowups'
 import NoShowPrevention from './components/NoShowPrevention'
-import DemoFlow from './components/DemoFlow'
 
-type ViewType = 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'risk-management' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention' | 'demo-flow'
+type ViewType = 'main' | 'doctor-onboarding' | 'doctor-dashboard' | 'patient-onboarding' | 'patient-dashboard' | 'smart-triage' | 'appointment-scheduling' | 'cancellation-cascade' | 'predictive-followups' | 'no-show-prevention'
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('main')
@@ -30,10 +28,14 @@ function App() {
     setCurrentView('patient-dashboard')
   }
 
+  const handleViewChange = (view: ViewType) => {
+    setCurrentView(view)
+  }
+
   const renderCurrentView = () => {
     switch (currentView) {
       case 'main':
-        return <MainPage setCurrentView={setCurrentView} />
+        return <MainPage setCurrentView={handleViewChange} />
       case 'doctor-onboarding':
         return <DoctorOnboarding onRegistrationSuccess={handleDoctorRegistrationSuccess} />
       case 'doctor-dashboard':
@@ -46,24 +48,20 @@ function App() {
         return <SmartTriage />
       case 'appointment-scheduling':
         return <AppointmentScheduling />
-      case 'risk-management':
-        return <RiskManagement />
       case 'cancellation-cascade':
         return <CancellationCascade />
       case 'predictive-followups':
         return <PredictiveFollowups />
       case 'no-show-prevention':
         return <NoShowPrevention />
-      case 'demo-flow':
-        return <DemoFlow />
       default:
-        return <MainPage setCurrentView={setCurrentView} />
+        return <MainPage setCurrentView={handleViewChange} />
     }
   }
 
   return (
     <div className="App">
-      <Header currentView={currentView} setCurrentView={setCurrentView} userRole={userRole} />
+      <Header currentView={currentView} setCurrentView={handleViewChange} userRole={userRole} />
       <main className="main-content">
         {renderCurrentView()}
       </main>

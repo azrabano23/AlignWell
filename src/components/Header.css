@@ -15,13 +15,16 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  position: relative;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 1rem;
+  position: absolute;
+  left: 1rem;
 }
 
 .header-logo {

@@ -1,12 +1,13 @@
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
-  border-radius: 20px;
+  background: #f8f4eb;
+  border: 2px solid #ff808b;
+  border-radius: 8px;
   padding: 4rem 2rem;
   margin-bottom: 3rem;
   text-align: center;
-  color: white;
-  box-shadow: 0 10px 30px rgba(255, 128, 139, 0.3);
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .hero-content {
@@ -15,24 +16,28 @@
 }
 
 .hero-title {
-  font-size: 4rem;
-  font-weight: 700;
+  font-size: 3.5rem;
+  font-weight: 800;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #ff808b;
+  letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 1.5rem;
-  opacity: 0.95;
+  color: #333;
 }
 
 .hero-description {
   font-size: 1.1rem;
   line-height: 1.6;
   margin-bottom: 2.5rem;
-  opacity: 0.9;
+  color: #666;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-buttons {
@@ -62,17 +67,15 @@
 .stat-card {
   background: white;
   padding: 2rem;
-  border-radius: 15px;
+  border-radius: 4px;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  border: 2px solid #e1e5e9;
+  transition: all 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
   border-color: #ff808b;
-  box-shadow: 0 10px 30px rgba(255, 128, 139, 0.2);
+  box-shadow: 0 2px 8px rgba(255, 128, 139, 0.15);
 }
 
 .stat-number {
@@ -105,10 +108,11 @@
 }
 
 .section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   color: #333;
   margin-bottom: 1rem;
+  letter-spacing: -0.02em;
 }
 
 .section-subtitle {
@@ -127,28 +131,39 @@
 .feature-card {
   background: white;
   padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  border-radius: 4px;
+  border: 2px solid #e1e5e9;
+  transition: all 0.2s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  border-color: #ebbad1;
-  box-shadow: 0 10px 30px rgba(235, 186, 209, 0.2);
+  border-color: #ff808b;
+  box-shadow: 0 2px 8px rgba(255, 128, 139, 0.15);
 }
 
 .feature-icon {
-  font-size: 3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
   margin-bottom: 1rem;
+  color: #ff808b;
+  background: #f8f4eb;
+  border: 2px solid #ff808b;
+  border-radius: 4px;
+  padding: 0.75rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
 }
 
 .feature-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: #333;
   margin-bottom: 1rem;
+  letter-spacing: -0.01em;
 }
 
 .feature-description {
@@ -171,7 +186,7 @@
 }
 
 .feature-benefits li::before {
-  content: '✓';
+  content: '→';
   position: absolute;
   left: 0;
   color: #ff808b;
@@ -192,26 +207,36 @@
 .specialty-card {
   background: white;
   padding: 2rem;
-  border-radius: 15px;
+  border-radius: 4px;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  border: 2px solid #e1e5e9;
+  transition: all 0.2s ease;
 }
 
 .specialty-card:hover {
-  transform: translateY(-5px);
   border-color: #ff808b;
-  box-shadow: 0 10px 30px rgba(255, 128, 139, 0.2);
+  box-shadow: 0 2px 8px rgba(255, 128, 139, 0.15);
 }
 
 .specialty-icon {
-  font-size: 3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
   margin-bottom: 1rem;
+  color: #ff808b;
+  background: #f8f4eb;
+  border: 2px solid #ff808b;
+  border-radius: 4px;
+  padding: 0.75rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
 }
 
 .specialty-name {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #333;
 }
@@ -230,30 +255,41 @@
 .nav-card {
   background: white;
   padding: 2rem;
-  border-radius: 15px;
+  border-radius: 4px;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  border: 2px solid #e1e5e9;
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .nav-card:hover {
-  transform: translateY(-5px);
-  border-color: #ebbad1;
-  box-shadow: 0 10px 30px rgba(235, 186, 209, 0.2);
+  border-color: #ff808b;
+  box-shadow: 0 2px 8px rgba(255, 128, 139, 0.15);
 }
 
 .nav-icon {
-  font-size: 3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
   margin-bottom: 1rem;
+  color: #ff808b;
+  background: #f8f4eb;
+  border: 2px solid #ff808b;
+  border-radius: 4px;
+  padding: 0.75rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
 }
 
 .nav-card h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #333;
   margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
 }
 
 .nav-card p {
@@ -275,29 +311,40 @@
 .compliance-item {
   background: white;
   padding: 2rem;
-  border-radius: 15px;
+  border-radius: 4px;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+  border: 2px solid #e1e5e9;
+  transition: all 0.2s ease;
 }
 
 .compliance-item:hover {
-  transform: translateY(-5px);
   border-color: #ff808b;
-  box-shadow: 0 10px 30px rgba(255, 128, 139, 0.2);
+  box-shadow: 0 2px 8px rgba(255, 128, 139, 0.15);
 }
 
 .compliance-icon {
-  font-size: 3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
   margin-bottom: 1rem;
+  color: #ff808b;
+  background: #f8f4eb;
+  border: 2px solid #ff808b;
+  border-radius: 4px;
+  padding: 0.75rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
 }
 
 .compliance-item h4 {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #333;
   margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
 }
 
 .compliance-item p {

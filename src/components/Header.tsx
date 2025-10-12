@@ -8,15 +8,15 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
   const navigationItems = [
-    { id: 'main', label: 'Home', icon: '🏠' },
-    { id: 'doctor-onboarding', label: 'Doctor Onboarding', icon: '👨‍⚕️' },
-    { id: 'doctor-dashboard', label: 'Doctor Dashboard', icon: '📊' },
-    { id: 'patient-onboarding', label: 'Patient Onboarding', icon: '👩‍⚕️' },
-    { id: 'appointment-scheduling', label: 'Scheduling', icon: '📅' },
-    { id: 'risk-management', label: 'Risk Management', icon: '⚠️' },
-    { id: 'cancellation-cascade', label: 'Cancellation Cascade', icon: '🔄' },
-    { id: 'predictive-followups', label: 'Follow-ups', icon: '🔮' },
-    { id: 'demo-flow', label: 'Demo Flow', icon: '🎯' }
+    { id: 'main', label: 'Home', icon: 'HM' },
+    { id: 'doctor-onboarding', label: 'Doctor Onboarding', icon: 'MD' },
+    { id: 'doctor-dashboard', label: 'Doctor Dashboard', icon: 'DB' },
+    { id: 'patient-onboarding', label: 'Patient Onboarding', icon: 'PT' },
+    { id: 'appointment-scheduling', label: 'Scheduling', icon: 'SC' },
+    { id: 'risk-management', label: 'Risk Management', icon: 'RS' },
+    { id: 'cancellation-cascade', label: 'Cancellation Cascade', icon: 'CC' },
+    { id: 'predictive-followups', label: 'Follow-ups', icon: 'PF' },
+    { id: 'demo-flow', label: 'Demo Flow', icon: 'DF' }
   ]
 
   return (

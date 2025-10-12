@@ -15,7 +15,7 @@ interface MainPageProps {
 const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
   const features: FeatureCard[] = [
     {
-      icon: '👨‍⚕️',
+      icon: 'MD',
       title: 'Doctor Onboarding & Management',
       description: 'Build provider trust + ensure insurance/credentialing compliance',
       benefits: [
@@ -26,7 +26,7 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
       ]
     },
     {
-      icon: '👩‍⚕️',
+      icon: 'PT',
       title: 'Patient Onboarding',
       description: 'Reduce friction + ensure right subspecialist referral',
       benefits: [
@@ -37,7 +37,7 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
       ]
     },
     {
-      icon: '📅',
+      icon: 'SC',
       title: 'Appointment Scheduling',
       description: 'Align every appointment with the right specialist at the right time',
       benefits: [
@@ -48,7 +48,7 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
       ]
     },
     {
-      icon: '⚠️',
+      icon: 'RS',
       title: 'Risk-Aware No-Show Prevention',
       description: 'Reduce cancellations + increase follow-through',
       benefits: [
@@ -59,7 +59,7 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
       ]
     },
     {
-      icon: '🔄',
+      icon: 'CC',
       title: 'Cancellation Cascade',
       description: 'Never let a slot go unused',
       benefits: [
@@ -70,7 +70,7 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
       ]
     },
     {
-      icon: '🔮',
+      icon: 'PF',
       title: 'Predictive Follow-ups',
       description: 'Close the loop on chronic + preventive care',
       benefits: [
@@ -83,12 +83,12 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
   ]
 
   const specialties = [
-    'Maternal-fetal Medicine',
-    'Urogynecology & Reconstructive Pelvic Medicine',
-    'Complex/Minimally Invasive Surgery',
-    'Reproductive Endocrinology',
-    'Gynecologic Oncology',
-    'General OB/GYN'
+    { name: 'Maternal-fetal Medicine', code: 'MFM' },
+    { name: 'Urogynecology & Reconstructive Pelvic Medicine', code: 'URO' },
+    { name: 'Complex/Minimally Invasive Surgery', code: 'MIS' },
+    { name: 'Reproductive Endocrinology', code: 'REI' },
+    { name: 'Gynecologic Oncology', code: 'GYN' },
+    { name: 'General OB/GYN', code: 'OBG' }
   ]
 
   const stats = [
@@ -114,13 +114,13 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
               className="btn btn-primary btn-large"
               onClick={() => setCurrentView('demo-flow')}
             >
-              🎯 See Demo Flow
+              View Demo Flow
             </button>
             <button 
               className="btn btn-secondary btn-large"
               onClick={() => setCurrentView('patient-onboarding')}
             >
-              👩‍⚕️ Try Patient Onboarding
+              Try Patient Onboarding
             </button>
           </div>
         </div>
@@ -176,15 +176,8 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
         <div className="specialties-grid">
           {specialties.map((specialty, index) => (
             <div key={index} className="specialty-card">
-              <div className="specialty-icon">
-                {index === 0 && '🤱'}
-                {index === 1 && '🏥'}
-                {index === 2 && '🔬'}
-                {index === 3 && '🧬'}
-                {index === 4 && '🎗️'}
-                {index === 5 && '👩‍⚕️'}
-              </div>
-              <h4 className="specialty-name">{specialty}</h4>
+              <div className="specialty-icon">{specialty.code}</div>
+              <h4 className="specialty-name">{specialty.name}</h4>
             </div>
           ))}
         </div>
@@ -201,49 +194,49 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
         
         <div className="navigation-grid">
           <div className="nav-card" onClick={() => setCurrentView('doctor-onboarding')}>
-            <div className="nav-icon">👨‍⚕️</div>
+            <div className="nav-icon">MD</div>
             <h3>Doctor Onboarding</h3>
             <p>Provider registration and credentialing</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('doctor-dashboard')}>
-            <div className="nav-icon">📊</div>
+            <div className="nav-icon">DB</div>
             <h3>Doctor Dashboard</h3>
             <p>Appointment management and analytics</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('patient-onboarding')}>
-            <div className="nav-icon">👩‍⚕️</div>
+            <div className="nav-icon">PT</div>
             <h3>Patient Onboarding</h3>
             <p>Smart triage and specialty mapping</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('appointment-scheduling')}>
-            <div className="nav-icon">📅</div>
+            <div className="nav-icon">SC</div>
             <h3>Appointment Scheduling</h3>
             <p>Intelligent slot matching</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('risk-management')}>
-            <div className="nav-icon">⚠️</div>
+            <div className="nav-icon">RS</div>
             <h3>Risk Management</h3>
             <p>No-show prevention strategies</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('cancellation-cascade')}>
-            <div className="nav-icon">🔄</div>
+            <div className="nav-icon">CC</div>
             <h3>Cancellation Cascade</h3>
             <p>Automated slot re-offering</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('predictive-followups')}>
-            <div className="nav-icon">🔮</div>
+            <div className="nav-icon">PF</div>
             <h3>Predictive Follow-ups</h3>
             <p>Chronic care management</p>
           </div>
           
           <div className="nav-card" onClick={() => setCurrentView('demo-flow')}>
-            <div className="nav-icon">🎯</div>
+            <div className="nav-icon">DF</div>
             <h3>Demo Flow</h3>
             <p>Complete workflow demonstration</p>
           </div>
@@ -261,25 +254,25 @@ const MainPage: React.FC<MainPageProps> = ({ setCurrentView }) => {
         
         <div className="compliance-grid">
           <div className="compliance-item">
-            <div className="compliance-icon">🔒</div>
+            <div className="compliance-icon">SEC</div>
             <h4>HIPAA Compliance</h4>
             <p>End-to-end encryption and privacy protection</p>
           </div>
           
           <div className="compliance-item">
-            <div className="compliance-icon">📋</div>
+            <div className="compliance-icon">AUD</div>
             <h4>Audit Trail</h4>
             <p>Complete decision logging with rules version tracking</p>
           </div>
           
           <div className="compliance-item">
-            <div className="compliance-icon">✅</div>
+            <div className="compliance-icon">CRD</div>
             <h4>Credentialing</h4>
             <p>Automated provider verification and insurance matching</p>
           </div>
           
           <div className="compliance-item">
-            <div className="compliance-icon">🎯</div>
+            <div className="compliance-icon">AI</div>
             <h4>Triage Accuracy</h4>
             <p>AI-powered specialty mapping with 89% accuracy</p>
           </div>

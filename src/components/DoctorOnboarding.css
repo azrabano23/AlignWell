@@ -1,6 +1,6 @@
 .doctor-onboarding {
   min-height: 100vh;
-  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
+  background: #f8f4eb;
   padding: 2rem 0;
 }
 
@@ -175,23 +175,29 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
+  background: #ff808b;
   color: white;
+  border: 2px solid #ff808b;
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 128, 139, 0.4);
+  background: #e55a6b;
+  border-color: #e55a6b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 128, 139, 0.3);
 }
 
 .btn-secondary {
   background: #ebbad1;
   color: white;
+  border: 2px solid #ebbad1;
 }
 
 .btn-secondary:hover:not(:disabled) {
   background: #d4a5c7;
-  transform: translateY(-2px);
+  border-color: #d4a5c7;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(235, 186, 209, 0.3);
 }
 
 /* Responsive Design */

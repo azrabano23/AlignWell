@@ -1,6 +1,6 @@
 .doctor-onboarding {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
   padding: 2rem 0;
 }
 
@@ -96,7 +96,7 @@
   color: #333;
   margin: 0 0 1.5rem 0;
   font-size: 1.3rem;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid #ff808b;
   padding-bottom: 0.5rem;
 }
 
@@ -134,8 +134,8 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #ff808b;
+  box-shadow: 0 0 0 3px rgba(255, 128, 139, 0.1);
 }
 
 .form-group input:invalid {
@@ -175,22 +175,22 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(255, 128, 139, 0.4);
 }
 
 .btn-secondary {
-  background: #6c757d;
+  background: #ebbad1;
   color: white;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #5a6268;
+  background: #d4a5c7;
   transform: translateY(-2px);
 }
 

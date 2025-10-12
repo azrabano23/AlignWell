@@ -1,5 +1,15 @@
 .App {
+  width: 100%;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  background: #f8f4eb;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Reset some default styles */
@@ -14,4 +24,270 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global styles for consistent spacing */
+.page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.card-header {
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Button styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ebbad1 0%, #ff808b 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 128, 139, 0.4);
+}
+
+.btn-secondary {
+  background: #ebbad1;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #d4a5c7;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: #ff808b;
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #ff6b7a;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  background: #ebbad1;
+  color: #333;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #d4a5c7;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: #e55a6b;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #d44a5b;
+  transform: translateY(-2px);
+}
+
+/* Status indicators */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-low {
+  background: #ebbad1;
+  color: #333;
+}
+
+.status-medium {
+  background: #ff808b;
+  color: white;
+}
+
+.status-high {
+  background: #d4a5c7;
+  color: white;
+}
+
+.status-critical {
+  background: #e55a6b;
+  color: white;
+}
+
+/* Loading states */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff808b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive utilities */
+@media (max-width: 1200px) {
+  .page-container {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  /* Make grids responsive on tablets */
+  .grid-responsive {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  /* Make tables responsive */
+  table {
+    font-size: 0.9rem;
+  }
+  
+  th, td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .page-title {
+    font-size: 1.75rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .card-header {
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Make tables responsive */
+  table {
+    font-size: 0.8rem;
+  }
+  
+  th, td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  /* Make grids responsive */
+  .grid-responsive {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem;
+  }
+  
+  /* Make flex containers responsive */
+  .flex-responsive {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

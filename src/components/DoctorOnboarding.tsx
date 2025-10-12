@@ -168,7 +168,7 @@ const DoctorOnboarding: React.FC = () => {
           </div>
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #667eea', paddingBottom: '0.5rem' }}>Personal Information</h3>
+              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #f7acac', paddingBottom: '0.5rem' }}>Personal Information</h3>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -231,7 +231,7 @@ const DoctorOnboarding: React.FC = () => {
             </div>
 
             <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #667eea', paddingBottom: '0.5rem' }}>Professional Information</h3>
+              <h3 style={{ color: '#333', margin: '0 0 1.5rem 0', fontSize: '1.3rem', borderBottom: '2px solid #f7acac', paddingBottom: '0.5rem' }}>Professional Information</h3>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>

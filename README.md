@@ -1,277 +1,53 @@
-# AlignWell MedEd Tool
+# AlignWell — a medical onboarding & education platform
 
-A comprehensive medical education platform for simulated doctor onboarding with AI-powered features, calendar integration, and HIPAA-compliant data management.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 
-## 🏥 Overview
-
-AlignWell is designed to streamline the doctor onboarding process in medical education environments. It features a complete workflow from account creation to dashboard analytics, with AI-generated follow-up plans and calendar synchronization.
-
-## 🏗️ Architecture
-
-- **Frontend**: React + TypeScript + Vite
-- **Backend**: FastAPI + Python
-- **Database**: AWS DynamoDB (HIPAA-compliant)
-- **AI**: AWS Bedrock (Claude 3 Sonnet)
-- **Calendar**: Google Calendar API
-- **Deployment**: Serverless-ready (Lambda + Docker)
-
-## ✨ Features
-
-### Core Workflow
-1. **Account Creation**: Complete doctor profiles with credentials, insurance, and hospital affiliations
-2. **Schedule Setup**: Google Calendar sync or manual schedule blocks
-3. **Delegation**: Role-based IAM for staff access control
-4. **Dashboard**: Simulated metrics and AI-generated follow-up plans
-
-### Technical Features
-- **HIPAA Compliance**: DynamoDB encryption with AWS KMS
-- **AI Integration**: AWS Bedrock for follow-up plan generation
-- **Calendar Sync**: Google Calendar API integration
-- **Role-Based Access**: IAM roles for staff delegation
-- **Audit Logging**: CloudWatch integration
-- **Serverless Ready**: Lambda deployment with Mangum
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- AWS Account with DynamoDB and Bedrock access
-- Google Cloud Project with Calendar API enabled
-
-### Backend Setup
-
-```bash
-# Navigate to backend directory
-cd backend
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment variables
-cp env.example .env
-# Edit .env with your AWS credentials and Google API settings
-
-# Set up DynamoDB table
-python setup_dynamodb.py
-
-# Configure Google Calendar
-python google_calendar_setup.py
-
-# Start the server
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### Frontend Setup
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-### Access the Application
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
-
-## 📋 API Endpoints
-
-### Core Endpoints
-- `POST /onboard-doctor` - Complete doctor onboarding workflow
-- `GET /doctor/{doctor_id}` - Get doctor profile
-- `GET /doctors` - List all doctors
-- `PUT /doctor/{doctor_id}/status` - Update onboarding status
-- `GET /doctor/{doctor_id}/dashboard` - Get dashboard metrics
-
-### Utility Endpoints
-- `GET /` - API information
-- `GET /health` - Health check
-
-## 🔧 Configuration
-
-### Environment Variables
-
-```env
-# AWS Configuration
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key_here
-AWS_SECRET_ACCESS_KEY=your_secret_key_here
-
-# DynamoDB Configuration
-DYNAMODB_TABLE=AlignWell-Doctors
-
-# Bedrock Configuration
-BEDROCK_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
-
-# Google Calendar Configuration
-GOOGLE_CREDENTIALS_FILE=credentials.json
-GOOGLE_TOKEN_FILE=token.json
-```
-
-## 🗄️ Database Schema
-
-### DynamoDB Table: `AlignWell-Doctors`
-
-**Primary Key**: `doctor_id` (String)
-
-**Global Secondary Index**: `EmailIndex`
-- **Partition Key**: `email` (String)
-
-**Attributes**:
-- `doctor_id`: String (Primary Key)
-- `email`: String (GSI Key)
-- `first_name`: String
-- `last_name`: String
-- `specialty`: String
-- `medical_license_number`: String
-- `npi_number`: String
-- `phone_number`: String
-- `board_certifications`: List[String]
-- `insurance_accepted`: List[Object]
-- `hospital_affiliations`: List[Object]
-- `calendar_sync_enabled`: Boolean
-- `calendar_provider`: String
-- `manual_schedule_blocks`: List[Object]
-- `staff_members`: List[Object]
-- `bio`: String
-- `languages_spoken`: List[String]
-- `emergency_contact`: Object
-- `onboarding_status`: String
-- `created_at`: String (ISO 8601)
-- `updated_at`: String (ISO 8601)
-
-## 🤖 AI Features
-
-### Follow-up Plan Generation
-The system uses AWS Bedrock with Claude 3 Sonnet to generate comprehensive follow-up care plans based on:
-
-- Doctor's specialty
-- Professional experience
-- Hospital affiliations
-- Best practices for the specialty
-
-Generated plans include:
-- Standard follow-up protocols
-- Recommended appointment intervals
-- Key metrics to monitor
-- Patient education topics
-- Referral criteria
-- Emergency contact protocols
-
-## 📅 Calendar Integration
-
-### Google Calendar Sync
-- OAuth 2.0 authentication
-- Recurring availability blocks
-- Real-time synchronization
-- Privacy controls
-
-### Manual Schedule Blocks
-- Custom time slots
-- Recurring patterns
-- Block types (available, busy, break)
-- Day-of-week scheduling
-
-## 👥 Staff Delegation
-
-### Role-Based Access Control
-- **Admin**: Full access to all functions
-- **Nurse**: Patient care and appointment management
-- **Receptionist**: Scheduling and patient information
-- **Assistant**: Basic patient information access
-
-### IAM Role Creation
-Automatically creates AWS IAM roles for each staff member with appropriate permissions based on their role.
-
-## 🔒 Security & Compliance
-
-### HIPAA Compliance
-- DynamoDB encryption with AWS KMS
-- Audit logging to CloudWatch
-- Secure credential management
-- Role-based access control
-
-### Data Protection
-- Input validation and sanitization
-- Secure API endpoints
-- Encrypted data storage
-- Audit trail maintenance
-
-## 🚀 Deployment
-
-### Serverless Deployment
-```bash
-# Install Serverless Framework
-npm install -g serverless
-npm install -g serverless-python-requirements
-
-# Deploy to AWS
-cd backend
-serverless deploy
-```
-
-### Docker Deployment
-```bash
-# Build image
-cd backend
-docker build -t alignwell-meded-tool .
-
-# Run container
-docker run -p 8000:8000 --env-file .env alignwell-meded-tool
-```
-
-## 🧪 Testing
-
-### API Testing
-```bash
-cd backend
-python test_alignwell_api.py
-```
-
-### Manual Testing
-```bash
-# Test health endpoint
-curl http://localhost:8000/health
-
-# Test onboarding
-curl -X POST http://localhost:8000/onboard-doctor \
-  -H "Content-Type: application/json" \
-  -d @sample_doctor.json
-```
-
-## 📚 Documentation
-
-- **Backend API**: [backend/README.md](backend/README.md)
-- **API Docs**: http://localhost:8000/docs (when running)
-- **Setup Guide**: [SETUP.md](SETUP.md)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🆘 Support
-
-For issues and questions:
-1. Check the troubleshooting section in [backend/README.md](backend/README.md)
-2. Review the API documentation
-3. Check the logs for error messages
-4. Create an issue in the repository
+AlignWell is a full-stack platform for **simulated clinical onboarding** — registering doctors and patients, capturing structured demographics/insurance/consent, running a triage intake, and scheduling appointments — built as a medical-education tool that mirrors a real intake system without touching real patient data.
 
 ---
 
-**AlignWell MedEd Tool - Empowering Medical Education** 🏥✨
+## The problem
+
+Clinical onboarding and intake is where a lot of healthcare's administrative cost and error lives, and it's also something medical trainees rarely get to practice end-to-end before they're doing it for real. The pieces — provider registration, patient demographics, insurance capture, consent, triage, scheduling — are individually simple and collectively a mess of state, validation, and privacy requirements. AlignWell is a sandbox that makes that whole flow concrete: a realistic intake system trainees and builders can work against, using synthetic data.
+
+## Market
+
+Digital health and medical-education software are both large, growing markets — global digital health is measured in the **hundreds of billions of USD** with strong double-digit growth (Grand View Research / Statista sector data), and clinician onboarding/credentialing is a recognized pain point that startups (e.g. Medallion) specifically target. AlignWell sits at the education end: a teaching/prototyping environment for the intake workflows that production EHRs make hard to experiment with.
+
+## What it does
+
+- **Provider onboarding** — doctor registration and structured `DoctorProfile`s.
+- **Patient intake** — demographics, insurance, and explicit `PatientConsents` as first-class typed models.
+- **Triage** — a structured triage payload to route incoming patients.
+- **Scheduling** — appointment creation with Google Calendar integration.
+
+## Technical breakdown
+
+- **Typed API backend** — **FastAPI** with Pydantic models for every entity (doctor, patient, demographics, insurance, consents, triage, appointment), so the data contract is explicit and validated at the edge rather than hoped for.
+- **Managed, encrypted datastore** — **AWS DynamoDB** with **KMS** encryption at rest. DynamoDB is a HIPAA-*eligible* AWS service, and the app is built with those safeguards in mind (encryption, least-privilege keys) — see the honest note below.
+- **Calendar integration** — Google Calendar for appointment scheduling.
+- **React + TypeScript front end** (Vite) over the API.
+
+**Skills demonstrated:** designing a typed, validated API for a domain with real structure (clinical intake); modelling consent/insurance/demographics as explicit schemas; integrating a managed encrypted datastore and a third-party calendar API; and full-stack delivery (FastAPI + React/TS).
+
+## Honest note on "HIPAA"
+
+The architecture uses **HIPAA-eligible services and encryption (DynamoDB + KMS)**, but this is an **educational tool on synthetic data — it is not a HIPAA-certified system.** Real HIPAA compliance requires a signed AWS Business Associate Agreement, full administrative/physical/technical safeguards, access auditing, and a formal risk assessment — none of which a teaching prototype carries. The design is HIPAA-*aware*; it is not HIPAA-*compliant*, and it shouldn't be used with real PHI. Saying so is the responsible version of the claim.
+
+## Quick start
+
+```bash
+# Backend
+cd backend && python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# configure .env with AWS + Google credentials, then:
+uvicorn main:app --reload
+
+# Frontend
+npm install && npm run dev
+```
+
+## License
+
+MIT — see [LICENSE](LICENSE). Author: **Azra Bano**.
